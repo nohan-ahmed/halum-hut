@@ -9,6 +9,9 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+# Import from allauth
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
 # import from locals
 from accounts.models import User
 from .serializers import CustomRegisterSerializer
@@ -53,3 +56,6 @@ class VerifyEmailView(APIView):
         else:
             return Response({"error": "Invalid verification link."}, status=status.HTTP_400_BAD_REQUEST)
         
+
+class GoogleLoginView(SocialLoginView): # if you want to use Implicit Grant, use this
+    adapter_class = GoogleOAuth2Adapter

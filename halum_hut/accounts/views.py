@@ -18,8 +18,8 @@ from django.db import IntegrityError
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
 # import from locals
-from accounts.models import User, Address
-from .serializers import CustomRegisterSerializer, AddressSerializer
+from accounts.models import User, Address, SellerAccount
+from .serializers import CustomRegisterSerializer, AddressSerializer, SellerAccountSerializer
 from core.Permissions import IsOwnerOrReadOnly
 # Create your views here.
 class RegisterView(APIView):
@@ -75,3 +75,16 @@ class AddressView(ModelViewSet):
             serializer.save(user=self.request.user)
         except IntegrityError:
             raise ValidationError({"error": "User already has an address."})
+        
+class SellerAccountView(ModelViewSet):
+    queryset = SellerAccount.objects.all()
+    serializer_class = SellerAccountSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Ensure that the user does not already have a seller account
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise ValidationError({"error": "User already has a seller account."})
+    

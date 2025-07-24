@@ -1,11 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from dj_rest_auth.views import PasswordResetConfirmView
-from .views import RegisterView, VerifyEmailView, GoogleLoginView, AddressView
+from .views import RegisterView, VerifyEmailView, GoogleLoginView, AddressView, SellerAccountView
 
 router = DefaultRouter()
 router.register(r'address', AddressView, basename='address')
-
+router.register(r'seller-account', SellerAccountView, basename='seller-account')
 urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('registration/', RegisterView.as_view(), name='registration'),

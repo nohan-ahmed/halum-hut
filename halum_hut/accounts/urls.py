@@ -9,7 +9,7 @@ from .views import (
     VerifyEmailView,
     GoogleLoginView,
     AddressView,
-    SellerAccountView
+    SellerAccountView,
 )
 
 # DRF Router for ViewSet-based APIs
@@ -23,6 +23,7 @@ auth_patterns = [
     path('verify-email/<uidb64>/<token>/', VerifyEmailView.as_view(), name='verify_email'),
     path('password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('google/', GoogleLoginView.as_view(), name='google_login'),
+
 ]
 
 urlpatterns = [

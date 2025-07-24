@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin  # <-- important
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm
-from accounts.models import User, Address, UserActivityLog
+from accounts.models import User, Address, UserActivityLog, SellerAccount
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -38,3 +38,9 @@ class UserActivityLogAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'activity_type')
     list_filter = ('activity_type', 'timestamp')
     ordering = ('-timestamp',)
+
+@admin.register(SellerAccount)
+class SellerAccountAdmin(admin.ModelAdmin):
+    list_display = ('user', 'store_name', 'is_active', 'created_at')
+    search_fields = ('user__username', 'store_name')
+    list_filter = ('created_at', 'updated_at', 'is_active')

@@ -158,6 +158,7 @@ REST_AUTH = {
     'JWT_AUTH_COOKIE': 'access',            # optional (for cookie storage)
     'JWT_AUTH_REFRESH_COOKIE': 'refresh',   # optional
     'JWT_AUTH_HTTPONLY': False,             # needed for testing in Postman
+    'OLD_PASSWORD_FIELD_ENABLED': True,  # Enable old password field for password change
 }
 
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     # custom apps
     "accounts",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -157,6 +159,18 @@ REST_AUTH = {
     'JWT_AUTH_REFRESH_COOKIE': 'refresh',   # optional
     'JWT_AUTH_HTTPONLY': False,             # needed for testing in Postman
 }
+
+
+# Simple JWT settings
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+}
+
 
 # SMTP Server Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

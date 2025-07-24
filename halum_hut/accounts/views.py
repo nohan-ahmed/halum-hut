@@ -6,16 +6,21 @@ from django.utils.encoding import force_bytes, smart_str
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 # Import from rest_framework
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
+
 # Import from allauth
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
 # import from locals
-from accounts.models import User
-from .serializers import CustomRegisterSerializer
-
+from accounts.models import User, Address
+from .serializers import CustomRegisterSerializer, AddressSerializer
+from core.Permissions import IsOwnerOrReadOnly
 # Create your views here.
 class RegisterView(APIView):
     def post(self, request):
@@ -59,3 +64,14 @@ class VerifyEmailView(APIView):
 
 class GoogleLoginView(SocialLoginView): # if you want to use Implicit Grant, use this
     adapter_class = GoogleOAuth2Adapter
+
+class AddressView(ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise ValidationError({"error": "User already has an address."})

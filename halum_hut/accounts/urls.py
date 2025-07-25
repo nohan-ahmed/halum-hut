@@ -34,5 +34,5 @@ urlpatterns = [
     path('', include(auth_patterns)),
 
     # Your API ViewSets (address, seller account)
-    path('profile/', include(router.urls)),
+    path('user/', include(router.urls)),
 ]

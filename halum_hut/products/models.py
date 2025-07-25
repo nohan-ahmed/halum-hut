@@ -10,6 +10,7 @@ from django.conf import settings
 class Brand(models.Model):
     logo = models.ImageField(upload_to='brands/', null=True, blank=True)
     name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -37,7 +38,7 @@ class Category(models.Model):
 class Product(models.Model):
     """A product can belong to a brand and a category."""
     thumbnail = models.ImageField(upload_to='products/', null=True, blank=True)
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     description = models.TextField()
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
@@ -47,7 +48,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 ### -----------------------
@@ -64,7 +65,7 @@ class ProductVariant(models.Model):
     image = models.ImageField(upload_to='variants/', null=True, blank=True)  # optional
 
     def __str__(self):
-        return f"{self.product.title} - {self.sku}"
+        return f"{self.product.name} - {self.sku}"
 
 
 ### -----------------------

@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from accounts.models import SellerAccount
+from django.utils.text import slugify
 
-
-### -----------------------
+### ---------------------
 ### 🔹 BRAND & CATEGORY
 ### -----------------------
 
@@ -37,6 +38,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     """A product can belong to a brand and a category."""
+    seller = models.ForeignKey(SellerAccount, on_delete=models.CASCADE) 
     thumbnail = models.ImageField(upload_to='products/', null=True, blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
@@ -47,6 +49,19 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Product.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+        
+        
     def __str__(self):
         return self.name
 
@@ -58,12 +73,12 @@ class Product(models.Model):
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     sku = models.CharField(max_length=100, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    compare_at_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # for discounts
+    regular_price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # for discounts
     stock = models.PositiveIntegerField()
     is_active = models.BooleanField(default=True)
-    image = models.ImageField(upload_to='variants/', null=True, blank=True)  # optional
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"{self.product.name} - {self.sku}"
 

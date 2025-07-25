@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # custom apps
     "accounts",
     "core",
+    "products",
 ]
 
 MIDDLEWARE = [

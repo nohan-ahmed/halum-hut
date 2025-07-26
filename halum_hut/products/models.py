@@ -125,6 +125,6 @@ class ProductImage(models.Model):
     alt_text = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f"{self.product.title} - Image"
+        return f"{self.product.name} - Image"
 
 

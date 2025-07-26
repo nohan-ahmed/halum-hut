@@ -206,3 +206,4 @@ __marimo__/
 # Ignore settings that are specific to the Halum Hut project.
 db.sqlite3
 *.sqlite3
+/media/

@@ -28,6 +28,18 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', )
 
+class AttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Attribute
+        fields = '__all__'
+        read_only_fields = ('id', )
+        
+class AttributeValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AttributeValue
+        fields = '__all__'
+        read_only_fields = ('id', )
+
 class VariantAttributeValueSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VariantAttributeValue

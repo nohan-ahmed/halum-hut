@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from products import serializers
 from core.Permissions import IsAdminOrReadOnly
-from products.permissions import IsSellerOrReadOnly, IsSellerOrReadOnlyForVariant, IsSellerOrReadOnlyForProductImage
+from products.permissions import IsSellerOrReadOnly, IsSellerOrReadOnlyForProductData
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
@@ -29,7 +29,7 @@ class ProductAPIView(ModelViewSet):
 class ProductVariantAPIView(ModelViewSet):
     queryset = serializers.models.ProductVariant.objects.all()
     serializer_class = serializers.ProductVariantSerializer
-    permission_classes = [IsSellerOrReadOnlyForVariant]  # Add your permission classes here if needed
+    permission_classes = [IsSellerOrReadOnlyForProductData]  # Add your permission classes here if needed
 
     def perform_create(self, serializer):
         serializer.save()  # You can add additional logic here if needed
@@ -47,7 +47,7 @@ class VariantAttributeValueAPIView(ModelViewSet):
 class ProductImageAPIView(ModelViewSet):
     queryset = serializers.models.ProductImage.objects.all()
     serializer_class = serializers.ProductImageSerializer
-    permission_classes = [IsSellerOrReadOnlyForProductImage]  # Add your permission classes here if needed
+    permission_classes = [IsSellerOrReadOnlyForProductData]  # Add your permission classes here if needed
 
     def perform_create(self, serializer):
         serializer.save()  # You can add additional logic here if needed

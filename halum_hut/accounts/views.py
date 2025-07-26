@@ -5,6 +5,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, smart_str
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
+from django.db import IntegrityError
 # Import from rest_framework
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -12,7 +13,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
-from django.db import IntegrityError
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 # Import from allauth
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
@@ -20,8 +23,11 @@ from dj_rest_auth.registration.views import SocialLoginView
 from accounts.models import User, Address, SellerAccount
 from .serializers import CustomRegisterSerializer, AddressSerializer, SellerAccountSerializer
 from core.Permissions import IsOwnerOrReadOnly
+from core.paginations import StandardResultsSetPagination
 # Create your views here.
 class RegisterView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'register'
     def post(self, request):
         serializer = CustomRegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -44,8 +50,9 @@ class RegisterView(APIView):
             return Response({"message": "Please verify your email address."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class VerifyEmailView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'register'
     def get(self, request, uidb64, token):
         try:
             uid = smart_str(urlsafe_base64_decode(uidb64))
@@ -60,7 +67,6 @@ class VerifyEmailView(APIView):
         else:
             return Response({"error": "Invalid verification link."}, status=status.HTTP_400_BAD_REQUEST)
         
-
 class GoogleLoginView(SocialLoginView): # if you want to use Implicit Grant, use this
     adapter_class = GoogleOAuth2Adapter
 
@@ -68,6 +74,11 @@ class AddressView(ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    throttle_classes = [UserRateThrottle]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['address_line_1', 'city', 'state', 'zip_code']
+    filterset_fields = ['city', 'state']
+    pagination_class = StandardResultsSetPagination
 
     def perform_create(self, serializer):
         try:
@@ -79,6 +90,11 @@ class SellerAccountView(ModelViewSet):
     queryset = SellerAccount.objects.all()
     serializer_class = SellerAccountSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    throttle_classes = [UserRateThrottle]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['id', 'store_name', 'store_description']
+    filterset_fields = ['store_name']
+    pagination_class = StandardResultsSetPagination
 
     def perform_create(self, serializer):
         # Ensure that the user does not already have a seller account

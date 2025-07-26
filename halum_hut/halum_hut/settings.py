@@ -145,9 +145,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # restframework_settings
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "10000/day",
+        "user": "10000/day",
+        "register": "10/day",  # Custom throttle for registration
+    },
 }
 
 
@@ -183,5 +188,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "mdpolashislam152@gmail.com"
 EMAIL_HOST_PASSWORD = "nkof ufoa gjfw gwql"
-
-

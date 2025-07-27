@@ -10,8 +10,8 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(models.CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cart', 'product', 'quantity', 'created_at', 'updated_at')
-    search_fields = ('cart__user__username', 'product__name')
+    list_display = ('id', 'cart', 'variant', 'quantity', 'created_at', 'updated_at')
+    search_fields = ('cart__user__username', 'variant__product__name')
 
 @admin.register(models.Wishlist)
 class WishlistAdmin(admin.ModelAdmin):

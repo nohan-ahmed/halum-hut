@@ -4,7 +4,11 @@ from products.models import Product, ProductVariant
 # Create your models here.
 
 class Cart(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='cart') # One-to-one relationship with User
+    # This means each user can have only one cart.
+    # If you want to allow multiple carts per user, change this to ForeignKey.
+    # For now, we will keep it simple with just user and created_at fields.
+    # You can add more fields like total_price, etc.
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -19,7 +23,7 @@ class CartItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.quantity} of {self.product.name} in {self.cart.user.username}'s cart"
+        return f"{self.quantity} of {self.variant} in {self.cart.user.username}'s cart"
 
 class Wishlist(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE) # Foreign key to User model

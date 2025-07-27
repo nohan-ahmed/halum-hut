@@ -41,6 +41,6 @@ class UserActivityLogAdmin(admin.ModelAdmin):
 
 @admin.register(SellerAccount)
 class SellerAccountAdmin(admin.ModelAdmin):
-    list_display = ('user', 'store_name', 'is_active', 'created_at')
+    list_display = ('id', 'user', 'store_name', 'is_active', 'created_at')
     search_fields = ('user__username', 'store_name')
     list_filter = ('created_at', 'updated_at', 'is_active')

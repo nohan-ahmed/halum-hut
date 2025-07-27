@@ -44,7 +44,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField()
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) # need to set null=True for optional category
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)

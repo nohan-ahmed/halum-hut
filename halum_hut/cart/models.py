@@ -17,7 +17,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(to=Cart, on_delete=models.CASCADE, related_name='items') # Related name allows reverse access to items from Cart
-    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True) # remove null=True before production
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE) 
     quantity = models.PositiveIntegerField(default=1) # Quantity of the product in the cart
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
